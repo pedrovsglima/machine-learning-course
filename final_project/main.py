@@ -1,7 +1,6 @@
 import toml
 
-from src.data import train_test_split
-
+from src.data import train_test_split, transform
 
 with open("config.toml", "r") as f:
     config = toml.load(f)
@@ -15,7 +14,16 @@ def main():
         test_size=config["dataset"]["test_size"],
         random_state=config["dataset"]["random_state"]
     )
+    print("Raw data:")
+    print("X_train:", X_train.shape)
+    print("X_test:", X_test.shape)
+    print("y_train:", y_train.shape)
+    print("y_test:", y_test.shape)
 
+    # feature engineering
+    X_train, y_train = transform.execute_train(X_train, y_train)
+    
+    print("\nData transformation:")
     print("X_train:", X_train.shape)
     print("X_test:", X_test.shape)
     print("y_train:", y_train.shape)

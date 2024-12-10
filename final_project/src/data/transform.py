@@ -6,12 +6,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 def remove_null_rows(X:pd.DataFrame, y:pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
-    remove_indexes = set()
-    for col in y.columns:
-        count_null_values = y[col].isnull().sum()
-        if count_null_values > 0:
-            to_remove = y.loc[y[col].isnull()].index.tolist()
-            remove_indexes.update(set(to_remove))
+    remove_indexes = y[y.isnull().any(axis=1)].index
 
     y.drop(index=remove_indexes, inplace=True)
     y.reset_index(drop=True, inplace=True)

@@ -22,7 +22,7 @@ def main():
     print("y_test:", y_test.shape)
 
     # feature engineering
-    X_train, y_train = transform.execute_train(X_train, y_train)
+    X_train, X_test, y_train, y_test = transform.execute(X_train, X_test, y_train, y_test)
 
     print("\nData transformation:")
     print("X_train:", X_train.shape)

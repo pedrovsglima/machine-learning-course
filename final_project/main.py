@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 from src.data import train_test_split, transform
 from src.features import selection
-from src.models.regression import RegressionModel
+from src.models import regression, save_model
 
 with open("config.toml", "r") as f:
     config = toml.load(f)
@@ -18,52 +18,42 @@ def main():
         test_size=config["dataset"]["test_size"],
         random_state=config["dataset"]["random_state"]
     )
-    print("Raw data:")
-    print("X_train:", X_train.shape)
-    print("X_test:", X_test.shape)
-    print("y_train:", y_train.shape)
-    print("y_test:", y_test.shape)
 
     # feature engineering
     X_train, X_test, y_train, y_test = transform.execute(X_train, X_test, y_train, y_test)
 
-    print("\nData transformation:")
-    print("X_train:", X_train.shape)
-    print("X_test:", X_test.shape)
-    print("y_train:", y_train.shape)
-    print("y_test:", y_test.shape)
-
     # feature selection
-    # existing methods: ["rfe", "mutual information", "andom forest"]
-    best_features_rfe = selection.execute(X_train, y_train, method="rfe")
-    best_features_mi = selection.execute(X_train, y_train, method="mutual information")
-    best_features_rf = selection.execute(X_train, y_train, method="random forest")
-
-    print(f"\nMethod 'RFE' selected {len(best_features_rfe)} features:\n{best_features_rfe}")
-    print(f"\nMethod 'Mutual Information' selected {len(best_features_mi)} features:\n{best_features_mi}")
-    print(f"\nMethod 'Random Forest' selected {len(best_features_rf)} features:\n{best_features_rf}")
+    methods = ["rfe", "mutual information", "random forest"]
+    best_features = {method: selection.execute(X_train, y_train, method=method) for method in methods}
+    selection.save_to_excel(best_features)
 
     feature_selection_data = {
-        "rfe": (X_train[best_features_rfe], X_test[best_features_rfe]),
-        "mutual information": (X_train[best_features_mi], X_test[best_features_mi]),
-        "random forest": (X_train[best_features_rf], X_test[best_features_rf]),
-        "all": (X_train, X_test)
+        method: (X_train[features], X_test[features]) for method, features in best_features.items()
     }
+    feature_selection_data["all"] = (X_train, X_test)
 
+    # model training and evaluation
     models = [
         {"name": "random_forest", "model": RandomForestRegressor(random_state=42), "grid_params": config["random_forest"]},
         # {"name": "linear_regression", "model": LinearRegression(), "grid_params": config["linear_regression"]},
     ]
 
+    results = []
     for model_dict in models:
-        model = RegressionModel(model_dict["model"], model_dict["grid_params"])
+        model = regression.RegressionModel(model_dict["model"], model_dict["grid_params"])
         for fs_method, (x_train, x_test) in feature_selection_data.items():
             model.perform_grid_search(x_train, y_train, cv_params=config["cross_validation"], scoring=config["grid_search"]["scoring"])
             y_pred = model.predict(x_test)
             metrics = model.get_metrics(y_test, y_pred, multioutput=config["metrics"]["multioutput_method"])
-            print(model_dict["name"], fs_method)
-            print(model.get_best_params())
-            print(metrics)
+            
+            results.append({
+                "model": model_dict["name"],
+                "feature_selection_method": fs_method,
+                "best_params": model.get_best_params(), # TODO: how to choose the best model?
+                "metrics": metrics
+            })
+
+    save_model.to_excel(results)
 
 if __name__ == "__main__":
     main()

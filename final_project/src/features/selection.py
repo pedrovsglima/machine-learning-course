@@ -128,3 +128,7 @@ def execute(X:pd.DataFrame, y:pd.DataFrame, method:str, select_k:int=None) -> li
         return method_instance.select_k_features(select_k)
     else:
         return method_instance.find_best_features()
+
+def save_to_excel(data:dict[str, list]) -> None:
+    df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data.items()]))
+    df.to_excel("results/selected_features.xlsx", index=False)

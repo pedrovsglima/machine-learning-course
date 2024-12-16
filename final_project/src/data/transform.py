@@ -50,8 +50,8 @@ def binary_encoder(x_train: pd.DataFrame, x_test: pd.DataFrame) -> tuple[pd.Data
 
     binary_cols = [col for col in x_train.columns if x_train[col].nunique() == 2]
 
-    x_train_bin = x_train[binary_cols]
-    x_test_bin = x_test[binary_cols].reset_index(drop=True)
+    x_train_bin = x_train[binary_cols].copy()
+    x_test_bin = x_test[binary_cols].copy().reset_index(drop=True)
 
     for col in binary_cols:
         unique_values = x_train_bin[col].unique()

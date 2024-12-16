@@ -4,25 +4,24 @@ sheet_name = "Battery Failure Databank"
 na_values = "-"
 input_cols = [
   "Cell-Description"
-  ,"Cell-Format"
+  # ,"Cell-Format"
   ,"Cell-Capacity-Ah"
   ,"Cell-Nominal-Voltage-V"
   ,"Cell-Energy-Wh"
   ,"Trigger-Mechanism"
-  ,"Cell-Failure-Mechanism"
   ,"Pre-Test-Cell-Open-Circuit-Voltage-V"
   ,"Pre-Test-Cell-Mass-g"
-  ,"Pre-Test-Positive-Copper-Mesh-Mass-g"
-  ,"Pre-Test-Negative-Copper-Mesh-Mass-g"
   ,"Pressure-Assisted-Seal-Configuration-Positive"
   ,"Pressure-Assisted-Seal-Configuration-Negative"
+  ,"Bottom-Vent-Yes-No"
 ]
 output_cols = [
     "Energy-Fraction-Cell-Body-kJ"
     ,"Energy-Fraction-Positive-Ejecta-kJ"
     ,"Energy-Fraction-Negative-Ejecta-kJ"
+    ,"Post-Test-Mass-Unrecovered-g"
 ]
-stratify_col = "Cell-Failure-Mechanism"
+stratify_col = "Trigger-Mechanism"
 test_size = 0.3
 random_state = 42
 

@@ -11,12 +11,8 @@ def split_data_from_file(file_data:dict, test_size:float, random_state:int) -> t
         na_values=file_data["na_values"]
     )
 
-    # TODO: add colunas calculadas/estimadas
-    # df['State-of-Charge'] = ...
-    # df['Correlation-OCV-and-SOC'] = ...
-
     # 'Cell-Failure-Mechanism' has a typo
-    df["Cell-Failure-Mechanism"] = df["Cell-Failure-Mechanism"].replace("Top Vent and Bottum Rupture", "Top Vent and Bottom Rupture")
+    # df["Cell-Failure-Mechanism"] = df["Cell-Failure-Mechanism"].replace("Top Vent and Bottum Rupture", "Top Vent and Bottom Rupture")
 
     # split data into training and test sets
     X = df[file_data["input_cols"]]

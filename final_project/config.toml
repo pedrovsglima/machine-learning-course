@@ -25,6 +25,9 @@ stratify_col = "Trigger-Mechanism"
 test_size = 0.3
 random_state = 42
 
+[feature_selection]
+corr_threshold = 0.85
+
 [cross_validation]
 n_splits = 5
 n_repeats = 10

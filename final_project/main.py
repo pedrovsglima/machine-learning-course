@@ -3,12 +3,24 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 
 from src.data import train_test_split, transform
-from src.features import selection
+from src.features import correlation, selection
 from src.models import regression, save_model
 
 with open("config.toml", "r") as f:
     config = toml.load(f)
 
+
+def get_all_feature_selection_scenarios(x_train, x_test, y_train, methods) -> dict:
+
+    best_features = {method: selection.execute(x_train, y_train, method) for method in methods}
+
+    selection.save_to_excel(best_features)
+
+    feature_selection_data = {method: (x_train[features], x_test[features]) for method, features in best_features.items()}
+
+    feature_selection_data["all"] = (x_train, x_test)
+
+    return feature_selection_data
 
 def main():
 
@@ -22,15 +34,21 @@ def main():
     # feature engineering
     X_train, X_test, y_train, y_test = transform.execute(X_train, X_test, y_train, y_test)
 
-    # feature selection
-    methods = ["rfe", "mutual information", "random forest"]
-    best_features = {method: selection.execute(X_train, y_train, method=method) for method in methods}
-    selection.save_to_excel(best_features)
+    # remove correlated features
+    X_train_corr, X_test_corr = correlation.remove_correlated_features(
+        X_train, X_test,
+        y_train, y_test,
+        config["feature_selection"]["corr_threshold"]
+    )
 
-    feature_selection_data = {
-        method: (X_train[features], X_test[features]) for method, features in best_features.items()
-    }
-    feature_selection_data["all"] = (X_train, X_test)
+    # all feature selection scenarios
+    methods = ["rfe", "mutual information", "random forest"]
+    feature_selection_data = get_all_feature_selection_scenarios(X_train, X_test, y_train, methods)
+    feature_selection_data_corr = get_all_feature_selection_scenarios(X_train_corr, X_test_corr, y_train, methods)
+
+    feature_selection_data.update(
+        {key+"_corr": value for key, value in feature_selection_data_corr.items()}
+    )
 
     # model training and evaluation
     models = [
@@ -49,7 +67,7 @@ def main():
             results.append({
                 "model": model_dict["name"],
                 "feature_selection_method": fs_method,
-                "best_params": model.get_best_params(), # TODO: how to choose the best model?
+                "best_params": model.get_best_params(),
                 "metrics": metrics
             })
 

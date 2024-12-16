@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 
@@ -130,5 +131,13 @@ def execute(X:pd.DataFrame, y:pd.DataFrame, method:str, select_k:int=None) -> li
         return method_instance.find_best_features()
 
 def save_to_excel(data:dict[str, list]) -> None:
-    df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data.items()]))
-    df.to_excel("results/selected_features.xlsx", index=False)
+    file_path = "results/selected_features.xlsx"
+    new_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data.items()]))
+
+    if os.path.exists(file_path):
+        existing_df = pd.read_excel(file_path)
+        combined_df = pd.concat([existing_df, new_df], axis=1)
+    else:
+        combined_df = new_df
+
+    combined_df.to_excel(file_path, index=False)

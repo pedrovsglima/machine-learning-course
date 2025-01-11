@@ -27,6 +27,14 @@ random_state = 42
 
 [feature_selection]
 corr_threshold = 0.85
+authors = [
+  "Cell-Capacity-Ah"
+  ,"Pre-Test-Cell-Mass-g"
+  ,"State-of-Charge"
+  ,"Chemistry_NMC/Graphite"
+  ,"Trigger-Mechanism_Nail"
+  ,"Bottom-Vent-Yes-No"
+]
 
 [cross_validation]
 n_splits = 5

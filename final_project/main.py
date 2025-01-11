@@ -49,6 +49,9 @@ def main():
     feature_selection_data.update(
         {key+"_corr": value for key, value in feature_selection_data_corr.items()}
     )
+    # features selected by the authors
+    feature_selection_data.update(
+        {"authors": (X_train[config["feature_selection"]["authors"]], X_test[config["feature_selection"]["authors"]])})
 
     # model training and evaluation
     models = [

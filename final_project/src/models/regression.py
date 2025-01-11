@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from typing import Any
 
+from scipy.stats import gaussian_kde
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error, explained_variance_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.base import BaseEstimator
@@ -67,12 +68,42 @@ class RegressionModel:
     #         }
     #     return results
 
-    # def save_figure(self, x_test: pd.DataFrame, y_test: pd.Series, y_pred: pd.Series, filename: str) -> None:
-    #     plt.figure(figsize=(10, 6))
-    #     plt.scatter(x_test.iloc[:, 0], y_test, color="blue", label="Actual")
-    #     plt.scatter(x_test.iloc[:, 0], y_pred, color="red", label="Predicted")
-    #     plt.xlabel("X Test")
-    #     plt.ylabel("Y Test / Predicted")
-    #     plt.legend()
-    #     plt.savefig(filename)
-    #     plt.close()
+    def save_figures(self, y_true: pd.Series, y_pred: pd.Series, filename: str) -> None:
+        # predicted vs actual
+        plt.figure(figsize=(6, 5))
+        plt.scatter(x=y_true, y=y_pred)
+        # ideal line
+        plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], color="red", linestyle="--")
+        plt.xlabel("Actual")
+        plt.ylabel("Predicted")
+        plt.grid()
+        plt.tight_layout()
+        plt.savefig(filename.format(plot="scatter"))
+        plt.close()
+
+        residuals = y_true.to_numpy() - y_pred
+
+        # residuals
+        plt.figure(figsize=(6, 5))
+        plt.scatter(x=y_true, y=residuals)
+        # horizontal line at zero
+        plt.axhline(0, color="red", linestyle="--")
+        plt.xlabel("Actual")
+        plt.ylabel("Residual")
+        plt.grid()
+        plt.tight_layout()
+        plt.savefig(filename.format(plot="residual"))
+        plt.close()
+
+        # histogram
+        plt.figure(figsize=(6, 5))
+        plt.hist(residuals, bins=20, color="blue", density=True, alpha=0.5)
+        kde = gaussian_kde(residuals, bw_method="silverman")
+        x = np.linspace(min(residuals), max(residuals), 1000)
+        plt.plot(x, kde(x), color="red", linestyle="--", linewidth=2)
+        plt.xlabel("Residual")
+        plt.ylabel("Frequency")
+        plt.grid()
+        plt.tight_layout()
+        plt.savefig(filename.format(plot="histogram"))
+        plt.close()

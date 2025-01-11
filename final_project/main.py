@@ -74,6 +74,14 @@ def main():
                 "metrics": metrics
             })
 
+            # save figures for each output target
+            for i, target in enumerate(y_test.columns):
+                model.save_figures(
+                    y_test[target], y_pred[:,i], config["metrics"]["figure_name"].format(
+                        config=f"{i}_{model_dict['name']}_{fs_method}_{"_".join(f'{k}_{v}' for k, v in model.get_best_params().items())}", plot="{plot}"
+                    )
+                )
+
     save_model.to_excel(results)
 
 if __name__ == "__main__":

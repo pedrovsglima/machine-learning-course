@@ -55,4 +55,5 @@ max_features = ["sqrt", "log2"]
 max_depth = [3, 5, 8]
 
 [metrics]
-multioutput_method = "raw_values" # ["raw_values", "uniform_average"]
+multioutput_method = "uniform_average" # ["raw_values", "uniform_average"]
+figure_name = "./results/figures/{plot}/{config}.pdf"

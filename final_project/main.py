@@ -10,9 +10,9 @@ with open("config.toml", "r") as f:
     config = toml.load(f)
 
 
-def get_all_feature_selection_scenarios(x_train, x_test, y_train, methods) -> dict:
+def get_all_feature_selection_scenarios(x_train, x_test, y_train, methods, suffix) -> dict:
 
-    best_features = {method: selection.execute(x_train, y_train, method) for method in methods}
+    best_features = {method+suffix: selection.execute(x_train, y_train, method) for method in methods}
 
     selection.save_to_excel(best_features)
 
@@ -43,8 +43,8 @@ def main():
 
     # all feature selection scenarios
     methods = ["rfe", "mutual information", "random forest"]
-    feature_selection_data = get_all_feature_selection_scenarios(X_train, X_test, y_train, methods)
-    feature_selection_data_corr = get_all_feature_selection_scenarios(X_train_corr, X_test_corr, y_train, methods)
+    feature_selection_data = get_all_feature_selection_scenarios(X_train, X_test, y_train, methods, "")
+    feature_selection_data_corr = get_all_feature_selection_scenarios(X_train_corr, X_test_corr, y_train, methods, "_corr")
 
     feature_selection_data.update(
         {key+"_corr": value for key, value in feature_selection_data_corr.items()}

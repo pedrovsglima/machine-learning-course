@@ -1,5 +1,5 @@
 import toml
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor
 
 from src.data import train_test_split, transform
@@ -55,8 +55,8 @@ def main():
 
     # model training and evaluation
     models = [
+        {"name": "ridge_regression", "model": Ridge(random_state=42), "grid_params": config["ridge_regression"]},
         {"name": "random_forest", "model": RandomForestRegressor(random_state=42), "grid_params": config["random_forest"]},
-        # {"name": "linear_regression", "model": LinearRegression(), "grid_params": config["linear_regression"]},
     ]
 
     results = []

@@ -44,10 +44,10 @@ random_state = 100
 [grid_search]
 scoring = "neg_mean_squared_error"
 
-[linear_regression]
+[ridge_regression]
+alpha = [0.1, 1.0, 10.0, 100.0]
 fit_intercept = [true, false]
-n_jobs = [1, 5]
-positive = [true, false]
+max_iter = [100, 500, 1000]
 
 [random_forest]
 n_estimators = [100, 200]

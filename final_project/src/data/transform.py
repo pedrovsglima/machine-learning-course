@@ -108,8 +108,8 @@ def execute(
     # add columns "State-of-Charge" and "Chemistry"
     x_train, x_test = add_calculated_columns(x_train, x_test)
 
-    # TODO: decidir o que fazer com esses campos
-    cols_to_drop = ["Cell-Description", "Pre-Test-Cell-Open-Circuit-Voltage-V", "State-of-Charge"]
+    # drop columns
+    cols_to_drop = ["Cell-Description"]
     x_train.drop(columns=cols_to_drop, inplace=True)
     x_test.drop(columns=cols_to_drop, inplace=True)
 

@@ -11,8 +11,6 @@ input_cols = [
   ,"Trigger-Mechanism"
   ,"Pre-Test-Cell-Open-Circuit-Voltage-V"
   ,"Pre-Test-Cell-Mass-g"
-  ,"Pressure-Assisted-Seal-Configuration-Positive"
-  ,"Pressure-Assisted-Seal-Configuration-Negative"
   ,"Bottom-Vent-Yes-No"
 ]
 output_cols = [
@@ -62,5 +60,5 @@ learning_rate = ["constant", "adaptive"]
 max_iter = [5000]
 
 [metrics]
-multioutput_method = "uniform_average" # ["raw_values", "uniform_average"]
+multioutput_method = "raw_values" # ["raw_values", "uniform_average"]
 figure_name = "./results/figures/{plot}/{config}.pdf"

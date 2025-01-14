@@ -23,7 +23,7 @@ def get_all_feature_selection_scenarios(x_train, x_test, y_train, methods, suffi
 
     feature_selection_data = {method: (x_train[features], x_test[features]) for method, features in best_features.items()}
 
-    feature_selection_data["all"] = (x_train, x_test)
+    feature_selection_data["all"+suffix] = (x_train, x_test)
 
     return feature_selection_data
 

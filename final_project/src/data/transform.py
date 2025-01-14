@@ -44,9 +44,9 @@ def remove_null_rows_on_target(X:pd.DataFrame, y:pd.DataFrame) -> tuple[pd.DataF
 
 def binary_encoder(x_train: pd.DataFrame, x_test: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     # edit columns to get only the material 'XXXXX-{material}'
-    for col in ["Pressure-Assisted-Seal-Configuration-Positive", "Pressure-Assisted-Seal-Configuration-Negative"]:
-        x_train[col] = x_train[col].str.split("-").str[1]
-        x_test[col] = x_test[col].str.split("-").str[1]
+    # for col in ["Pressure-Assisted-Seal-Configuration-Positive", "Pressure-Assisted-Seal-Configuration-Negative"]:
+    #     x_train[col] = x_train[col].str.split("-").str[1]
+    #     x_test[col] = x_test[col].str.split("-").str[1]
 
     binary_cols = [col for col in x_train.columns if x_train[col].nunique() == 2]
 

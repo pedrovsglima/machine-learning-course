@@ -51,9 +51,7 @@ def main():
     feature_selection_data = get_all_feature_selection_scenarios(X_train, X_test, y_train, methods, "")
     feature_selection_data_corr = get_all_feature_selection_scenarios(X_train_corr, X_test_corr, y_train, methods, "_corr")
 
-    feature_selection_data.update(
-        {key+"_corr": value for key, value in feature_selection_data_corr.items()}
-    )
+    feature_selection_data.update(feature_selection_data_corr)
     # features selected by the authors
     feature_selection_data.update(
         {"authors": (X_train[config["feature_selection"]["authors"]], X_test[config["feature_selection"]["authors"]])})
